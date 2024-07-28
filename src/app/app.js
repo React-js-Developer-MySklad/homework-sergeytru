@@ -54,8 +54,9 @@ rootElement.innerHTML = html;
 const tableBody = rootElement.querySelector(".main-data");
 
 function activateDeleteButtons(rootElement) {
-    rootElement.querySelectorAll('[data-id-to-delete]').forEach(function (triggerEl) {
-        let dataId = Number(triggerEl.getAttribute('data-id-to-delete'));
+    rootElement.querySelectorAll('.delete-item-button').forEach(function (triggerEl) {
+        let rowContainer = triggerEl.closest("[data-item-id]");
+        let dataId = Number(rowContainer.getAttribute('data-item-id'));
         if (dataId !== undefined) {
             triggerEl.addEventListener("click", event => {
                 counterparties = counterparties.filter(el => el.id !== dataId);
@@ -70,7 +71,6 @@ function updateTableBody() {
     tableBody.innerHTML = counterparties.map(oneof => buildByTemplate(oneof)).join("\n");
     //todo: редактирование по двойному нажатию
     activateDeleteButtons(tableBody);
-    //temp0.closest("tr")
 }
 
 updateTableBody();
