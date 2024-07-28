@@ -2,7 +2,7 @@ import html from "./app.html";
 import './app.css'
 import item_template from "./item.html";
 
-const counterparties = [
+let counterparties = [
     {
         "id": -5,
         "Наименование": "Московская биржа ММВБ-РТС",
@@ -42,7 +42,7 @@ const counterparties = [
 
 const buildByTemplate = function (data) {
     let result = item_template;
-    for (const column of ["Наименование", "ИНН", "Адрес", "КПП"]) {
+    for (const column of ["id", "Наименование", "ИНН", "Адрес", "КПП"]) {
         result = result.replaceAll("$" + column + "$", data[column])
     }
     return result;
@@ -53,10 +53,24 @@ rootElement.innerHTML = html;
 
 const tableBody = rootElement.querySelector(".main-data");
 
+function activateDeleteButtons(rootElement) {
+    rootElement.querySelectorAll('[data-id-to-delete]').forEach(function (triggerEl) {
+        let dataId = Number(triggerEl.getAttribute('data-id-to-delete'));
+        if (dataId !== undefined) {
+            triggerEl.addEventListener("click", event => {
+                counterparties = counterparties.filter(el => el.id !== dataId);
+                updateTableBody();
+                event.preventDefault();
+            });
+        }
+    });
+}
+
 function updateTableBody() {
     tableBody.innerHTML = counterparties.map(oneof => buildByTemplate(oneof)).join("\n");
     //todo: редактирование по двойному нажатию
-    //todo: удаление строки по кнопке
+    activateDeleteButtons(tableBody);
+    //temp0.closest("tr")
 }
 
 updateTableBody();
