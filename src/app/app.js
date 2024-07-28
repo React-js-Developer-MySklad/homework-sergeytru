@@ -40,11 +40,31 @@ let counterparties = [
     }
 ];
 
-const buildByTemplate = function (data) {
-    let result = item_template;
-    for (const column of ["id", "Наименование", "ИНН", "Адрес", "КПП"]) {
-        result = result.replaceAll("$" + column + "$", data[column])
+function nodeFromText(text) {
+    let templateNode = document.createElement('template');
+    templateNode.innerHTML = text;
+    let result = templateNode.content.children;
+    return result.length === 1 ? result[0] : result;
+}
+
+function buildByTemplate (data) {
+    let text = item_template;
+    for (const column of ["Наименование", "ИНН", "Адрес", "КПП"]) {
+        text = text.replaceAll("$" + column + "$", data[column])
     }
+    let result = nodeFromText(text);
+    result.addEventListener("click", event => {
+        if (event.target.classList.contains("delete-item-button")) {
+            counterparties = counterparties.filter(el => el.id !== data.id);
+            updateTableBody();
+            event.preventDefault();
+        }
+    });
+    result.addEventListener("dblclick", event => {
+        // TODO: edit dialog
+        console.log("edit item");
+        event.preventDefault();
+    });
     return result;
 }
 
@@ -53,24 +73,9 @@ rootElement.innerHTML = html;
 
 const tableBody = rootElement.querySelector(".main-data");
 
-function activateDeleteButtons(rootElement) {
-    rootElement.querySelectorAll('.delete-item-button').forEach(function (triggerEl) {
-        let rowContainer = triggerEl.closest("[data-item-id]");
-        let dataId = Number(rowContainer.getAttribute('data-item-id'));
-        if (dataId !== undefined) {
-            triggerEl.addEventListener("click", event => {
-                counterparties = counterparties.filter(el => el.id !== dataId);
-                updateTableBody();
-                event.preventDefault();
-            });
-        }
-    });
-}
-
 function updateTableBody() {
-    tableBody.innerHTML = counterparties.map(oneof => buildByTemplate(oneof)).join("\n");
-    //todo: редактирование по двойному нажатию
-    activateDeleteButtons(tableBody);
+    let newChilds = counterparties.map(oneof => buildByTemplate(oneof));
+    tableBody.replaceChildren( ...newChilds );
 }
 
 updateTableBody();
