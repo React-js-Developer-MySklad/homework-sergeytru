@@ -1,3 +1,4 @@
+import { Modal } from 'flowbite';
 import html from "./app.html";
 import './app.css'
 import item_template from "./item.html";
@@ -40,6 +41,10 @@ let counterparties = [
     }
 ];
 
+function editItem(item) {
+    rootElement.querySelectorAll('#counterparty-editor').forEach(dlg => new Modal(dlg).show());
+}
+
 function nodeFromText(text) {
     let templateNode = document.createElement('template');
     templateNode.innerHTML = text;
@@ -61,8 +66,7 @@ function buildByTemplate (data) {
         }
     });
     result.addEventListener("dblclick", event => {
-        // TODO: edit dialog
-        console.log("edit item");
+        editItem();
         event.preventDefault();
     });
     return result;
