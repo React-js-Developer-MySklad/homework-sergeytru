@@ -69,8 +69,14 @@ function initTable(editItem) {
         tableBody.replaceChildren(...newChildren);
     }
 
+    function addItem() {
+        let newItem = {};
+        newItem.id = Math.max(...counterparties.map(x => x.id)) + 1;
+        editItem(newItem, () => updateTableBody());
+    }
+
     updateTableBody();
-    return(tableRoot);
+    return {tableRoot, addItem};
 }
 
 export default initTable;

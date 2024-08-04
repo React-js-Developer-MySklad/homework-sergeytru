@@ -6,5 +6,6 @@ import initTable from './table/table';
 const rootElement = document.getElementById('root');
 rootElement.innerHTML = html;
 
-const tableShell = document.getElementById('table-placeholder');
-tableShell.appendChild(initTable(editItem));
+let {tableRoot, addItem} = initTable(editItem);
+document.getElementById('table-placeholder').appendChild(tableRoot);
+document.getElementById('add-row-button').addEventListener("click", addItem);
