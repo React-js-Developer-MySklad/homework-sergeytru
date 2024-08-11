@@ -40,7 +40,10 @@ function fillData(data) {
 
 function editItem(data, callback) {
     fillFields(data);
-    curCallback = callback;
+    curCallback = () => {
+        fillData(data);
+        callback();
+    }
     modal.show();
 }
 

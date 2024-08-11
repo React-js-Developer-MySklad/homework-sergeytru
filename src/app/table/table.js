@@ -72,7 +72,10 @@ function initTable(editItem) {
     function addItem() {
         let newItem = {};
         newItem.id = Math.max(...counterparties.map(x => x.id)) + 1;
-        editItem(newItem, () => updateTableBody());
+        editItem(newItem, () => {
+            counterparties.push(newItem);
+            updateTableBody();
+        });
     }
 
     updateTableBody();
