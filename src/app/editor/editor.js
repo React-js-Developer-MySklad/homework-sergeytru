@@ -7,12 +7,12 @@ let form = rootElement.querySelector("form");
 document.body.appendChild(rootElement);
 
 let modal = new Modal(rootElement);
-let curCallback = () => {};
+let onSubmitAction = () => {};
 
 rootElement.querySelectorAll("[type=submit]").forEach(btn => btn.addEventListener('click', event => {
     if (form.checkValidity()) {
         modal.hide();
-        curCallback();
+        onSubmitAction();
     } else {
         form.reportValidity();
     }
@@ -26,21 +26,21 @@ rootElement.querySelectorAll("[type=reset]").forEach(btn => btn.addEventListener
     event.stopPropagation();
 }));
 
-const key = field => field.attributes["data-key"].value;
+const getKey = field => field.attributes["data-key"].value;
 
 function fillFields(data) {
     const targets = rootElement.querySelectorAll("[data-key]");
-    targets.forEach(field => field.value = data[key(field)] || "");
+    targets.forEach(field => field.value = data[getKey(field)] || "");
 }
 
 function fillData(data) {
     const targets = rootElement.querySelectorAll("[data-key]");
-    targets.forEach(field => data[key(field)] = field.value);
+    targets.forEach(field => data[getKey(field)] = field.value);
 }
 
 function editItem(data, callback) {
     fillFields(data);
-    curCallback = () => {
+    onSubmitAction = () => {
         fillData(data);
         callback();
     }
